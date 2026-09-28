@@ -1,9 +1,16 @@
 import type { MetadataRoute } from "next";
-import { fetchProducts } from "@/services/products";
+import { getProducts } from "@/services/products";
 import { productSlug } from "@/utils/slug";
 import { absoluteUrl } from "@/utils/site";
 
-const staticRoutes = ["/", "/produtos", "/ofertas", "/servicos", "/sobre", "/contato"];
+const staticRoutes = [
+  "/",
+  "/produtos",
+  "/ofertas",
+  "/unidades",
+  "/sobre",
+  "/contato",
+];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = staticRoutes.map((path) => ({
@@ -11,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   try {
-    const products = await fetchProducts(AbortSignal.timeout(10000));
+    const products = await getProducts(AbortSignal.timeout(10000));
     const productEntries: MetadataRoute.Sitemap = products.map((product) => ({
       url: absoluteUrl(`/produtos/${productSlug(product)}`),
     }));

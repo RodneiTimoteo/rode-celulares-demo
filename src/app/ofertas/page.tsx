@@ -1,85 +1,55 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, SectionTitle, buttonStyles } from "@/components/ui";
-import { InstitutionalHero } from "@/components/institutional/shared";
+import {
+  InstitutionalHero,
+  WhatsAppCta,
+} from "@/components/institutional/shared";
 import { OfferSelections } from "@/components/institutional/offer-selections";
+
 export const metadata: Metadata = {
   title: "Ofertas",
   description:
-    "Explore seleções demonstrativas da RodeVita para higiene, cuidados e bem-estar. Campanhas fictícias, sem ofertas comerciais reais.",
+    "Confira produtos em destaque da RODE Celulares e consulte condições pelo WhatsApp.",
   alternates: { canonical: "/ofertas" },
 };
+
 export default function OffersPage() {
   return (
     <main id="catalogo" tabIndex={-1} className="flex-1">
       <InstitutionalHero
-        eyebrow="Ofertas RodeVita"
-        title="Cuidados que combinam com o seu dia."
-        description="Explore seleções demonstrativas de produtos para saúde, higiene e bem-estar."
-        note="Conteúdo demonstrativo. Ofertas e valores apresentados são fictícios."
+        eyebrow="Seleção RODE"
+        title="Ofertas em destaque"
+        description="Confira alguns dos produtos que separamos para você. Consulte valores e condições com nossa equipe."
       />
-      <Container className="py-12">
-        <section className="promotion">
-          <div>
-            <p className="eyebrow">Campanha conceitual</p>
-            <SectionTitle className="text-3xl text-surface md:text-4xl">
-              Semana da Saúde
-            </SectionTitle>
-            <p className="mt-4 text-lg">Cuidados para toda a família</p>
+      <Container className="py-14 md:py-20">
+        <section aria-labelledby="ofertas-produtos">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">Produtos selecionados</p>
+              <SectionTitle
+                id="ofertas-produtos"
+                className="text-3xl md:text-4xl"
+              >
+                Oportunidades para ficar conectado
+              </SectionTitle>
+              <p className="mt-4 max-w-2xl leading-relaxed text-muted">
+                Preços e condições são demonstrativos e devem ser confirmados
+                diretamente no atendimento.
+              </p>
+            </div>
+            <Link href="/produtos" className={buttonStyles("secondary")}>
+              Ver todos os produtos
+            </Link>
           </div>
-          <Link href="/produtos" className={buttonStyles("secondary")}>
-            Explorar produtos ↗
-          </Link>
-        </section>
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          <section className="editorial bg-health-soft">
-            <span className="editorial-symbol text-health" aria-hidden="true">
-              ♡
-            </span>
-            <p className="eyebrow">Seleção demonstrativa</p>
-            <SectionTitle className="relative text-2xl">
-              Especial Mamãe e Bebê
-            </SectionTitle>
-            <p className="relative mt-4 text-muted">
-              Mais carinho em cada fase
-            </p>
-            <Link
-              href="/produtos?categoria=Mam%C3%A3e%20e%20Beb%C3%AA"
-              className={buttonStyles("secondary", "relative mt-7")}
-            >
-              Conhecer seleção ↗
-            </Link>
-          </section>
-          <section className="editorial bg-brand-soft">
-            <span className="editorial-symbol text-brand" aria-hidden="true">
-              ✳
-            </span>
-            <p className="eyebrow">Seleção demonstrativa</p>
-            <SectionTitle className="relative text-2xl">
-              Bem-estar e beleza
-            </SectionTitle>
-            <p className="relative mt-4 text-muted">
-              Cuidados que fazem parte da sua rotina
-            </p>
-            <Link
-              href="/produtos?categoria=Cuidados%20com%20a%20Pele"
-              className={buttonStyles("secondary", "relative mt-7")}
-            >
-              Explorar cuidados ↗
-            </Link>
-          </section>
-        </div>
-        <section className="py-16" aria-labelledby="offer-selections">
-          <p className="eyebrow">Inspire sua lista</p>
-          <SectionTitle id="offer-selections" className="mb-10 text-3xl">
-            Seleções em destaque
-          </SectionTitle>
           <OfferSelections />
         </section>
-        <div className="border-t border-border pt-8 text-center">
-          <Link href="/produtos" className={buttonStyles()}>
-            Ver catálogo completo ↗
-          </Link>
+
+        <div className="mt-16 md:mt-24">
+          <WhatsAppCta
+            title="Quer saber as condições?"
+            text="Fale com nossa equipe pelo WhatsApp e consulte disponibilidade, valores e formas de pagamento."
+          />
         </div>
       </Container>
     </main>

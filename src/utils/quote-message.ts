@@ -1,4 +1,6 @@
-import type { Produto } from "@/data/produtos";
+import type { ProdutoSelecionado } from "@/data/produtos";
+import { linhasVariacao } from "@/utils/product-variants";
+import { formatarMoeda, precoAtual } from "@/utils/product-price";
 
 export const FORMAS_PAGAMENTO = [
   "Não informar",
@@ -10,9 +12,7 @@ export const FORMAS_PAGAMENTO = [
 
 export type FormaPagamento = (typeof FORMAS_PAGAMENTO)[number];
 
-type ItemOrcamento = Pick<Produto, "nome" | "dosagem" | "exigeReceita"> & {
-  quantidade: number;
-};
+type ItemOrcamento = ProdutoSelecionado & { quantidade: number };
 
 export function isFormaPagamento(value: string): value is FormaPagamento {
   return FORMAS_PAGAMENTO.some((option) => option === value);
@@ -28,12 +28,17 @@ export function criarMensagemOrcamento({
   formaPagamento: FormaPagamento;
 }) {
   const produtos = itens
-    .map(
-      (item) =>
-        `• ${item.quantidade}x ${item.nome} ${item.dosagem}${
-          item.exigeReceita ? " — exige receita" : ""
-        }`,
-    )
+    .map((item) => {
+      const complemento = item.selecao?.armazenamento ? "" : ` ${item.dosagem}`;
+      const valorAtual = precoAtual(item);
+      return [
+        `${item.quantidade}x ${item.nome}${complemento}`,
+        ...linhasVariacao(item),
+        ...(valorAtual === undefined
+          ? []
+          : [`Preço: ${formatarMoeda(valorAtual)}`]),
+      ].join("\n");
+    })
     .join("\n");
 
   const detalhes: string[] = [];
@@ -47,16 +52,10 @@ export function criarMensagemOrcamento({
     detalhes.push(`Forma de pagamento:\n${formaPagamento}`);
   }
 
-  if (itens.some((item) => item.exigeReceita)) {
-    detalhes.push(
-      "Estou ciente de que alguns itens podem exigir apresentação de receita médica.",
-    );
-  }
-
   return [
-    "Olá! Gostaria de consultar a disponibilidade e solicitar um orçamento dos seguintes produtos:",
+    "Olá! Gostaria de consultar estes produtos:",
     produtos,
     ...detalhes,
-    "Aguardo o retorno. Obrigado!",
+    "Gostaria de saber disponibilidade e condições de pagamento.",
   ].join("\n\n");
 }

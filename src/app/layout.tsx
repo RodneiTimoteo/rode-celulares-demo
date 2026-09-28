@@ -20,12 +20,12 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
   title: {
-    default: "RodeVita | Drogaria & Bem-estar",
-    template: "%s | RodeVita",
+    default: "RODE Celulares | Smartphones, acessórios e tecnologia",
+    template: "%s | RODE Celulares",
   },
   description:
-    "Projeto demonstrativo da RodeVita, uma experiência digital de drogaria e bem-estar com catálogo de produtos, busca, categorias e solicitação de orçamento pelo WhatsApp.",
-  applicationName: "RodeVita",
+    "Conheça a RODE Celulares: smartphones, acessórios e tecnologia com atendimento próximo e orçamento pelo WhatsApp.",
+  applicationName: "RODE Celulares",
   authors: [
     {
       name: "RODE Soluções Inteligentes",
@@ -34,23 +34,23 @@ export const metadata: Metadata = {
   ],
   creator: "RODE Soluções Inteligentes",
   publisher: "RODE Soluções Inteligentes",
-  keywords: ["drogaria digital", "bem-estar", "catálogo demonstrativo"],
+  keywords: ["smartphones", "celulares", "acessórios", "tecnologia", "ofertas"],
   icons: {
-    icon: [{ url: "/brand/rodevita-simbolo.png", type: "image/png" }],
-    apple: [{ url: "/brand/rodevita-simbolo.png", type: "image/png" }],
+    icon: [{ url: "/brand/rode-celulares-symbol.svg", type: "image/svg+xml" }],
+    apple: [{ url: "/brand/rode-celulares-symbol.svg", type: "image/svg+xml" }],
   },
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    siteName: "RodeVita",
-    title: "RodeVita | Drogaria & Bem-estar",
-    description: "Cuidado para todos os dias.",
+    siteName: "RODE Celulares",
+    title: "RODE Celulares | Smartphones, acessórios e tecnologia",
+    description: "Conectando você com o que importa.",
     url: "/",
   },
   twitter: {
     card: "summary_large_image",
-    title: "RodeVita | Drogaria & Bem-estar",
-    description: "Cuidado para todos os dias.",
+    title: "RODE Celulares | Smartphones, acessórios e tecnologia",
+    description: "Conectando você com o que importa.",
   },
 };
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -62,24 +62,24 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         "@type": "WebSite",
         "@id": `${siteUrl}#website`,
         url: siteUrl,
-        name: "RodeVita",
-        alternateName: "RodeVita Drogaria & Bem-estar",
+        name: "RODE Celulares",
+        alternateName: "RODE Celulares e Tecnologia",
         description:
-          "Projeto demonstrativo de uma experiência digital de drogaria e bem-estar.",
+          "Loja demonstrativa de smartphones, acessórios e tecnologia.",
         inLanguage: "pt-BR",
         publisher: { "@id": `${siteUrl}#organization` },
       },
       {
         "@type": "Organization",
         "@id": `${siteUrl}#organization`,
-        name: "RodeVita",
+        name: "RODE Celulares",
         url: siteUrl,
         logo: {
           "@type": "ImageObject",
-          url: absoluteUrl("/brand/rodevita-logo-horizontal.png"),
+          url: absoluteUrl("/brand/rode-celulares-logo-horizontal.svg"),
         },
         description:
-          "Marca fictícia e projeto conceitual desenvolvido pela RODE Soluções Inteligentes para demonstrar soluções digitais para farmácias.",
+          "Marca fictícia e projeto conceitual desenvolvido pela RODE Soluções Inteligentes para demonstrar uma experiência digital de celulares e tecnologia.",
       },
     ],
   };

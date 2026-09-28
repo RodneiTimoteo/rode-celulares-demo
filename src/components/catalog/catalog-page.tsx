@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
@@ -10,11 +10,6 @@ import {
   SectionTitle,
   buttonStyles,
 } from "@/components/ui";
-import {
-  CATEGORIAS_PRINCIPAIS,
-  CATEGORIAS_ADICIONAIS,
-} from "@/data/categorias";
-import type { Produto } from "@/data/produtos";
 import { ProductCard } from "@/components/home/product-card";
 import { useCatalog } from "./catalog-provider";
 import { QuotePanel } from "./quote-panel";
@@ -49,31 +44,21 @@ function CatalogView({
     carregandoProdutos,
     erroProdutos,
     tentarNovamente,
-    carrinho,
     quantidadeTotal,
-    adicionarAoCarrinho,
   } = useCatalog();
   const [busca, setBusca] = useState(initialSearch);
   const [categoria, setCategoria] = useState(initialCategory);
   const [ordem, setOrdem] = useState("az");
   const [limite, setLimite] = useState(24);
-  const [feedback, setFeedback] = useState<{
-    nome: string;
-    sequence: number;
-  } | null>(null);
-  useEffect(() => {
-    if (!feedback) return;
-    const timer = window.setTimeout(() => setFeedback(null), 2800);
-    return () => window.clearTimeout(timer);
-  }, [feedback]);
   const categories = useMemo(() => {
     const names = [
-      ...new Set([
-        ...CATEGORIAS_PRINCIPAIS,
-        ...CATEGORIAS_ADICIONAIS,
-        ...produtos.map((p) => p.categoria.trim()),
-        categoria,
-      ]),
+      "Todos",
+      ...new Set(
+        produtos
+          .map((produto) => produto.categoria.trim())
+          .filter(Boolean)
+          .sort((a, b) => a.localeCompare(b, "pt-BR")),
+      ),
     ];
     return names.map((name) => ({
       name,
@@ -82,7 +67,7 @@ function CatalogView({
           ? produtos.length
           : produtos.filter((p) => p.categoria.trim() === name).length,
     }));
-  }, [produtos, categoria]);
+  }, [produtos]);
   const filtrados = useMemo(
     () =>
       filterProducts(produtos, busca, categoria).sort((a, b) => {
@@ -97,13 +82,6 @@ function CatalogView({
       }),
     [produtos, busca, categoria, ordem],
   );
-  const selecionados = (produto: Produto) =>
-    carrinho.find(
-      (item) =>
-        item.id === produto.id &&
-        item.nome === produto.nome &&
-        item.dosagem === produto.dosagem,
-    )?.quantidade ?? 0;
   function selectCategory(value: string) {
     setCategoria(value);
     setLimite(24);
@@ -115,13 +93,6 @@ function CatalogView({
   function reset() {
     search("");
     selectCategory("Todos");
-  }
-  function add(produto: Produto) {
-    adicionarAoCarrinho(produto);
-    setFeedback((previous) => ({
-      nome: produto.nome,
-      sequence: (previous?.sequence ?? 0) + 1,
-    }));
   }
   const resultText = busca.trim()
     ? `${filtrados.length} resultados para “${busca.trim()}”${categoria !== "Todos" ? ` em ${categoria}` : ""}`
@@ -141,13 +112,13 @@ function CatalogView({
             </span>
             <span aria-current="page">Produtos</span>
           </nav>
-          <p className="eyebrow">Catálogo RodeVita</p>
+          <p className="eyebrow">Catálogo RODE Celulares</p>
           <SectionTitle as="h1" className="text-3xl md:text-5xl">
             Encontre o que você precisa.
           </SectionTitle>
           <p className="mt-5 max-w-2xl leading-relaxed text-muted">
-            Pesquise medicamentos, cuidados pessoais, vitaminas e produtos para
-            toda a família.
+            Pesquise smartphones, acessórios, tecnologia e produtos para sua
+            rotina.
           </p>
           <p className="mt-4 text-sm font-medium text-health">
             Monte sua lista e solicite o orçamento diretamente pelo WhatsApp.
@@ -165,7 +136,7 @@ function CatalogView({
           <div className="flex flex-col gap-3 sm:flex-row">
             <SearchField
               id="catalog-search"
-              placeholder="Busque por nome, dosagem ou categoria..."
+              placeholder="Busque por nome, marca, modelo ou armazenamento..."
               value={busca}
               onChange={(event) => search(event.target.value)}
             />
@@ -260,12 +231,7 @@ function CatalogView({
               <>
                 <div className="catalog-product-grid">
                   {filtrados.slice(0, limite).map((produto) => (
-                    <ProductCard
-                      key={produto.id}
-                      produto={produto}
-                      onAdd={add}
-                      quantidade={selecionados(produto)}
-                    />
+                    <ProductCard key={produto.id} produto={produto} />
                   ))}
                 </div>
                 <div className="mt-8 text-center">
@@ -309,19 +275,6 @@ function CatalogView({
           {quantidadeTotal}
         </span>
       </a>
-      <div
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-        className={feedback ? "catalog-feedback" : "sr-only"}
-      >
-        {feedback && (
-          <>
-            <strong className="block">Adicionado ao orçamento</strong>
-            <span className="text-xs">{feedback.nome}</span>
-          </>
-        )}
-      </div>
     </main>
   );
 }

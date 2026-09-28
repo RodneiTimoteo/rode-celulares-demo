@@ -1,11 +1,11 @@
-# RodeVita
+# RODE Celulares
 
-Projeto demonstrativo de uma experiência digital para drogaria e bem-estar,
-desenvolvido pela RODE Soluções Inteligentes. O site reúne catálogo, busca,
-categorias, lista de orçamento e integração com WhatsApp.
+Projeto demonstrativo de uma experiência digital para uma loja de celulares e
+tecnologia, desenvolvido pela RODE Soluções Inteligentes. O site reúne catálogo,
+busca, categorias, lista de orçamento e integração com WhatsApp.
 
 Produtos, serviços, endereços e contatos apresentados são fictícios. O projeto
-não realiza vendas nem representa uma farmácia real.
+não realiza vendas nem representa uma loja real.
 
 ## Desenvolvimento
 
@@ -33,9 +33,8 @@ Copie `.env.example` para `.env.local` e configure quando necessário:
   preferencialmente, sem barra final. Exemplo: `https://www.exemplo.com.br`.
   É obrigatória em produção para canonicals, Open Graph, robots, sitemap e
   JSON-LD apontarem para o domínio correto.
-- `NEXT_PUBLIC_API_PRODUTOS_URL`: endpoint público do Google Apps Script que
-  retorna o catálogo em JSON. Se não for informado, o endpoint demonstrativo
-  versionado no projeto continua em uso.
+- `NEXT_PUBLIC_PRODUCTS_API_URL`: endpoint público do Google Apps Script que
+  retorna o catálogo em JSON. É obrigatório e não possui fallback local.
 
 Não versione `.env.local`. O arquivo já está coberto pelo `.gitignore`.
 
@@ -44,8 +43,7 @@ Não versione `.env.local`. O arquivo já está coberto pelo `.gitignore`.
 O projeto pode ser publicado em uma plataforma compatível com Next.js 16.
 
 1. Configure `NEXT_PUBLIC_SITE_URL` com o domínio final em HTTPS.
-2. Configure `NEXT_PUBLIC_API_PRODUTOS_URL` se o endpoint do catálogo for
-   diferente do endpoint demonstrativo atual.
+2. Configure `NEXT_PUBLIC_PRODUCTS_API_URL` com o endpoint público do catálogo.
 3. Garanta que o Google Apps Script esteja publicado para leitura pública e
    retorne JSON com o formato esperado pelo projeto.
 4. Execute `npm install` e `npm run build` no pipeline de produção.
@@ -58,5 +56,5 @@ o build. Antes de publicar, valide `/robots.txt`, `/sitemap.xml`, uma página de
 produto e a imagem social no domínio definitivo.
 
 Sem `NEXT_PUBLIC_SITE_URL` durante um build de produção, o projeto usa o domínio
-reservado `https://rodevita.example` apenas como fallback técnico. Esse fallback
+reservado `https://rodecelulares.example` apenas como fallback técnico. Esse fallback
 não deve ser usado em um deploy público.

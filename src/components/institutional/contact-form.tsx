@@ -9,12 +9,8 @@ export function ContactForm() {
   return (
     <section className="ui-card">
       <SectionTitle className="text-2xl">Envie sua mensagem</SectionTitle>
-      <p
-        id="contact-note"
-        className="mt-3 text-sm leading-relaxed text-muted"
-      >
-        Formulário demonstrativo. Nenhum dado é enviado ou armazenado. Use
-        informações fictícias.
+      <p id="contact-note" className="mt-3 text-sm leading-relaxed text-muted">
+        Formulário demonstrativo. Nenhum dado é enviado ou armazenado.
       </p>
       <form
         aria-describedby="contact-note"
@@ -39,35 +35,19 @@ export function ContactForm() {
             maxLength={120}
           />
         </div>
-        <div className="grid gap-5 sm:grid-cols-2">
-          <div>
-            <label htmlFor="contact-phone" className="form-label">
-              Telefone
-            </label>
-            <input
-              id="contact-phone"
-              name="telefone"
-              type="tel"
-              className="ui-input"
-              autoComplete="tel"
-              maxLength={30}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="contact-email" className="form-label">
-              E-mail
-            </label>
-            <input
-              id="contact-email"
-              name="email"
-              type="email"
-              className="ui-input"
-              autoComplete="email"
-              maxLength={160}
-              required
-            />
-          </div>
+        <div>
+          <label htmlFor="contact-phone" className="form-label">
+            Telefone
+          </label>
+          <input
+            id="contact-phone"
+            name="telefone"
+            type="tel"
+            className="ui-input"
+            autoComplete="tel"
+            maxLength={30}
+            required
+          />
         </div>
         <div>
           <label htmlFor="contact-subject" className="form-label">
@@ -83,10 +63,11 @@ export function ContactForm() {
             <option value="" disabled>
               Selecione um assunto
             </option>
-            <option>Produtos e catálogo</option>
-            <option>Serviços demonstrativos</option>
-            <option>Sobre o projeto</option>
-            <option>Outros assuntos</option>
+            <option>Consultar produto</option>
+            <option>Acessórios</option>
+            <option>Condições de pagamento</option>
+            <option>Atendimento</option>
+            <option>Outros</option>
           </select>
         </div>
         <div>

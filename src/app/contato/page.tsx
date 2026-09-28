@@ -1,104 +1,110 @@
 import type { Metadata } from "next";
-import { Container, SectionTitle } from "@/components/ui";
+import Link from "next/link";
+import { Card, Container, SectionTitle, buttonStyles } from "@/components/ui";
 import {
   InstitutionalHero,
   InstitutionalIcon,
-  WhatsAppCta,
 } from "@/components/institutional/shared";
 import { ContactForm } from "@/components/institutional/contact-form";
+import { storeUnits } from "@/data/units";
+import { whatsappUrl } from "@/utils/whatsapp";
+
 export const metadata: Metadata = {
   title: "Contato",
   description:
-    "Explore os canais fictícios de contato da RodeVita e seu formulário demonstrativo. Nenhuma mensagem ou dado é enviado pelo formulário.",
+    "Fale com a equipe da RODE Celulares pelo WhatsApp ou consulte os canais demonstrativos de atendimento.",
   alternates: { canonical: "/contato" },
 };
+
 export default function ContactPage() {
   return (
     <main id="catalogo" tabIndex={-1} className="flex-1">
       <InstitutionalHero
-        eyebrow="Fale conosco"
-        title="Estamos por perto."
-        description="Entre em contato pelos canais demonstrativos da RodeVita."
+        eyebrow="Atendimento RODE"
+        title="Fale com a gente"
+        description="Escolha a melhor forma de entrar em contato com nossa equipe."
       />
-      <Container className="py-12">
-        <div className="grid items-start gap-10 lg:grid-cols-[.8fr_1.2fr]">
-          <section>
-            <p className="eyebrow">Canais de contato</p>
-            <SectionTitle className="text-2xl">
-              Uma conversa faz a diferença.
-            </SectionTitle>
-            <dl className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
-              {[
-                ["WhatsApp", "(00) 99999-9999"],
-                ["Telefone", "(00) 3333-3333"],
-                ["E-mail", "contato@rodevita.demo"],
-              ].map(([label, value]) => (
-                <div className="border-b border-border pb-5" key={label}>
-                  <dt className="text-sm font-semibold text-brand">{label}</dt>
-                  <dd className="mt-2 break-words text-muted">{value}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="mt-7">
-              <h2 className="font-semibold text-brand">Endereço fictício</h2>
-              <address className="mt-2 not-italic leading-relaxed text-muted">
-                Av. Central, 123
-                <br />
-                Centro
-                <br />
-                Cidade Demonstrativa - PE
-              </address>
-            </div>
-            <div className="mt-7">
-              <h2 className="font-semibold text-brand">Horário</h2>
-              <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-muted">
-                <dt>Segunda a sábado</dt>
-                <dd>08h às 20h</dd>
-                <dt>Domingo</dt>
-                <dd>08h às 13h</dd>
-              </dl>
-            </div>
-            <p className="mt-7 rounded-xl bg-warning-soft p-4 text-xs text-warning">
-              Dados fictícios para fins de demonstração.
-            </p>
-          </section>
-          <ContactForm />
-        </div>
-        <section className="my-14" aria-labelledby="location-title">
+      <Container className="py-14 md:py-20">
+        <section aria-labelledby="canais-titulo">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">Um lugar no nosso conceito</p>
-              <SectionTitle id="location-title" className="text-2xl">
-                Nossa localização
+              <p className="eyebrow">Canais de atendimento</p>
+              <SectionTitle id="canais-titulo" className="text-3xl">
+                Estamos prontos para conversar
               </SectionTitle>
             </div>
-            <p className="text-xs text-muted">
-              Ilustração conceitual · Não representa um endereço real
-            </p>
           </div>
-          <div className="concept-map">
-            <div aria-hidden="true" className="map-roads" />
-            <div className="relative mx-auto max-w-sm rounded-2xl border border-border bg-surface p-6 text-center shadow-sm">
-              <span className="mx-auto mb-4 flex w-fit text-health">
-                <InstitutionalIcon kind="heart" />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            <Card className="contact-channel-card">
+              <span className="category-icon">
+                <InstitutionalIcon kind="chat" />
               </span>
-              <h3 className="font-bold text-brand">RodeVita</h3>
-              <p className="mt-2 text-sm text-muted">
-                Av. Central, 123 · Centro
+              <h2 className="mt-5 text-lg font-bold text-brand">WhatsApp</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Consulte produtos, disponibilidade e condições com a equipe.
               </p>
-              <p className="mt-1 text-xs text-muted">
-                Cidade Demonstrativa - PE
-              </p>
-              <span className="mt-4 inline-block rounded-full bg-health-soft px-3 py-1 text-xs text-health">
-                Localização fictícia
+              <a
+                href={whatsappUrl()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 inline-block text-sm font-semibold text-health"
+              >
+                Iniciar conversa ↗
+              </a>
+            </Card>
+            <Card className="contact-channel-card">
+              <span className="category-icon">
+                <InstitutionalIcon kind="phone" />
               </span>
-            </div>
+              <h2 className="mt-5 text-lg font-bold text-brand">Instagram</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted">
+                Perfil a definir. O link será adicionado quando o canal oficial
+                estiver cadastrado.
+              </p>
+            </Card>
+            {storeUnits.map((unit) => (
+              <Card key={unit.id} className="contact-channel-card">
+                <span className="category-icon">
+                  <InstitutionalIcon kind="location" />
+                </span>
+                <h2 className="mt-5 text-lg font-bold text-brand">
+                  {unit.name}
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-muted">
+                  {unit.address} · {unit.hours}
+                </p>
+                <Link
+                  href="/unidades"
+                  className="mt-5 inline-block text-sm font-semibold text-health"
+                >
+                  Ver unidade ↗
+                </Link>
+              </Card>
+            ))}
           </div>
         </section>
-        <WhatsAppCta
-          title="Prefere atendimento rápido?"
-          text="Explore a experiência de contato pelo canal de WhatsApp já integrado ao projeto."
-        />
+
+        <section className="mt-14 grid items-start gap-10 md:mt-20 lg:grid-cols-[.8fr_1.2fr]">
+          <div>
+            <p className="eyebrow">Mensagem demonstrativa</p>
+            <SectionTitle className="text-3xl md:text-4xl">
+              Conte como podemos ajudar
+            </SectionTitle>
+            <p className="mt-5 max-w-md leading-relaxed text-muted">
+              Este formulário não envia dados. Para atendimento, utilize o
+              WhatsApp como canal principal.
+            </p>
+            <a
+              href={whatsappUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonStyles("whatsapp", "mt-7")}
+            >
+              Falar no WhatsApp
+            </a>
+          </div>
+          <ContactForm />
+        </section>
       </Container>
     </main>
   );

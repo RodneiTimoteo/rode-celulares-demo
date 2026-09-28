@@ -7,7 +7,7 @@ import { Container } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Produtos",
   description:
-    "Explore o catálogo demonstrativo da RodeVita. Pesquise medicamentos, vitaminas, higiene, beleza e outros produtos.",
+    "Explore o catálogo demonstrativo da RODE Celulares. Pesquise smartphones, acessórios, tecnologia e outros produtos.",
   alternates: { canonical: "/produtos" },
 };
 export default function ProductsPage() {

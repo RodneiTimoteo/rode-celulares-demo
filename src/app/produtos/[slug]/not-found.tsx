@@ -6,7 +6,7 @@ export default function ProductNotFound() {
     <main id="catalogo" className="flex-1">
       <Container className="py-16">
         <section className="ui-card py-16 text-center">
-          <p className="eyebrow">Catálogo RodeVita</p>
+          <p className="eyebrow">Catálogo RODE Celulares</p>
           <SectionTitle as="h1" className="text-3xl">
             Produto não encontrado.
           </SectionTitle>

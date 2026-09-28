@@ -17,56 +17,55 @@ const INTERACTION_PAUSE = 8000;
 
 const slides = [
   {
-    eyebrow: "Saúde e bem-estar para toda a família",
-    title: "Cuidado que está sempre perto de você.",
+    eyebrow: "RODE Celulares",
+    title: "Seu próximo smartphone está aqui.",
     description:
-      "Encontre medicamentos, higiene, beleza e produtos para toda a família de forma simples, rápida e prática.",
-    ctaLabel: "Explorar produtos",
+      "Celulares, acessórios e tecnologia para deixar você sempre conectado.",
+    ctaLabel: "Ver smartphones",
     href: "/produtos",
     theme: "institutional",
-    image: "/images/home/hero-institucional.webp",
+    image: "/images/home/hero-smartphones.svg",
     imageAlt:
-      "Mulher em ambiente claro durante um momento cotidiano de autocuidado",
+      "Smartphone moderno em uma composição tecnológica laranja e grafite",
     highlights: [
-      "Catálogo digital",
-      "Atendimento próximo",
-      "Orçamento pelo WhatsApp",
+      "Modelos para diferentes rotinas",
+      "Atendimento personalizado",
+      "Consulta rápida pelo WhatsApp",
     ],
   },
   {
     eyebrow: "Ofertas da semana",
-    title: "Cuidados para toda a família.",
+    title: "Tecnologia para acompanhar sua rotina.",
     description:
-      "Explore seleções demonstrativas de saúde, higiene e bem-estar.",
-    ctaLabel: "Ver produtos",
-    href: "/produtos",
+      "Confira seleções e condições demonstrativas em smartphones e acessórios.",
+    ctaLabel: "Ver ofertas",
+    href: "/ofertas",
     theme: "weekly",
-    image: "/images/home/hero-ofertas.webp",
-    imageAlt: "Família reunida em uma rotina leve de cuidado e higiene",
+    image: "/images/home/hero-ofertas-tech.svg",
+    imageAlt: "Smartphones em destaque sobre uma composição grafite e laranja",
   },
   {
-    eyebrow: "Outubro Rosa",
-    title: "Cuidar de você também é prevenção.",
+    eyebrow: "Lançamentos",
+    title: "Novidades para ficar de olho.",
     description:
-      "Informação, atenção e cuidado fazem parte de uma rotina de saúde.",
-    ctaLabel: "Saiba mais",
-    href: "/sobre",
+      "Conheça os produtos que acabam de chegar e encontre seu próximo celular.",
+    ctaLabel: "Conhecer novidades",
+    href: "/produtos",
     theme: "pink",
-    image: "/images/home/hero-outubro-rosa.webp",
-    imageAlt:
-      "Mulher serena em uma sala clara com detalhes discretos em rosa",
+    image: "/images/home/hero-acessorios.svg",
+    imageAlt: "Fone de ouvido em uma composição minimalista de tecnologia",
   },
   {
-    eyebrow: "Mês das mães",
-    title: "Cuidado para quem cuida de todos.",
+    eyebrow: "Acessórios",
+    title: "Complete sua experiência.",
     description:
-      "Uma seleção demonstrativa de bem-estar, beleza e carinho para todos os dias.",
-    ctaLabel: "Explorar cuidados",
-    href: "/produtos?categoria=Cuidados%20com%20a%20Pele",
+      "Capinhas, carregadores, fones e mais para aproveitar melhor sua tecnologia.",
+    ctaLabel: "Ver acessórios",
+    href: "/produtos",
     theme: "mothers",
-    image: "/images/home/hero-maes.webp",
-    imageAlt: "Mãe e bebê em um momento acolhedor de cuidado e carinho",
-    subtheme: "Mamãe e Bebê",
+    image: "/images/home/hero-atendimento.svg",
+    imageAlt: "Smartphone exibindo uma confirmação de atendimento",
+    subtheme: "Tecnologia para o seu dia",
   },
 ] as const;
 
@@ -132,7 +131,11 @@ export function HeroCarousel() {
   const activeSlide = slides[activeIndex];
 
   return (
-    <section id="inicio" className="home-hero" aria-label="Destaques RodeVita">
+    <section
+      id="inicio"
+      className="home-hero"
+      aria-label="Destaques RODE Celulares"
+    >
       <Container className="home-hero__container">
         <div
           className="home-hero-carousel"
@@ -144,7 +147,9 @@ export function HeroCarousel() {
           onMouseLeave={() => setHovered(false)}
           onFocusCapture={() => setFocusWithin(true)}
           onBlurCapture={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            if (
+              !event.currentTarget.contains(event.relatedTarget as Node | null)
+            ) {
               setFocusWithin(false);
             }
           }}
@@ -259,7 +264,10 @@ export function HeroCarousel() {
             <span aria-hidden="true">→</span>
           </button>
 
-          <div className="home-hero-carousel__dots" aria-label="Selecionar destaque">
+          <div
+            className="home-hero-carousel__dots"
+            aria-label="Selecionar destaque"
+          >
             {slides.map((slide, index) => (
               <button
                 key={slide.eyebrow}

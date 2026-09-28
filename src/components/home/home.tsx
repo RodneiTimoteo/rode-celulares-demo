@@ -6,54 +6,28 @@ import { useCatalog } from "@/components/catalog/catalog-provider";
 import { filterProducts } from "@/components/catalog/filter-products";
 import { HeroCarousel } from "@/components/home/hero-carousel";
 import {
+  AdvantagesSection,
+  BrandsSection,
   CategorySection,
-  Differentials,
-  EditorialSection,
   FeaturedProducts,
   FinalCta,
   HomeSearch,
-  HowItWorks,
-  ServicesSummary,
+  LocationsSection,
 } from "@/components/home/sections";
 
 export default function Home() {
   const [busca, setBusca] = useState("");
   const router = useRouter();
-  const {
-    produtos,
-    carregandoProdutos,
-    erroProdutos,
-    carrinho,
-    adicionarAoCarrinho,
-  } = useCatalog();
+  const { produtos, carregandoProdutos, erroProdutos } = useCatalog();
 
   const sugestoes = useMemo(
     () =>
-      busca.trim()
-        ? filterProducts(produtos, busca, "Todos").slice(0, 5)
-        : [],
+      busca.trim() ? filterProducts(produtos, busca, "Todos").slice(0, 5) : [],
     [produtos, busca],
   );
 
   const destaques = useMemo(() => {
-    const selecionados = [];
-    const categorias = new Set<string>();
-
-    for (const produto of produtos) {
-      const categoria = produto.categoria.trim();
-      if (!categorias.has(categoria)) {
-        selecionados.push(produto);
-        categorias.add(categoria);
-      }
-      if (selecionados.length === 6) return selecionados;
-    }
-
-    for (const produto of produtos) {
-      if (!selecionados.includes(produto)) selecionados.push(produto);
-      if (selecionados.length === 6) break;
-    }
-
-    return selecionados;
+    return produtos.filter((produto) => produto.destaque).slice(0, 6);
   }, [produtos]);
 
   function abrirBusca(termo: string) {
@@ -68,12 +42,6 @@ export default function Home() {
   function abrirCategoria(categoria: string) {
     router.push(`/produtos?categoria=${encodeURIComponent(categoria)}`);
   }
-
-  const quantidadeSelecionada = (id: number, nome: string, dosagem: string) =>
-    carrinho.find(
-      (item) =>
-        item.id === id && item.nome === nome && item.dosagem === dosagem,
-    )?.quantidade ?? 0;
 
   return (
     <main id="catalogo" tabIndex={-1} className="flex-1 bg-background">
@@ -96,15 +64,10 @@ export default function Home() {
         produtos={destaques}
         carregando={carregandoProdutos}
         erro={erroProdutos}
-        onAdd={adicionarAoCarrinho}
-        getQuantity={(produto) =>
-          quantidadeSelecionada(produto.id, produto.nome, produto.dosagem)
-        }
       />
-      <EditorialSection />
-      <ServicesSummary />
-      <HowItWorks />
-      <Differentials />
+      <AdvantagesSection />
+      <BrandsSection />
+      <LocationsSection />
       <FinalCta />
     </main>
   );

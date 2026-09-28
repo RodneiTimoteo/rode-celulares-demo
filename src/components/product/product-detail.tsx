@@ -1,19 +1,23 @@
 "use client";
+
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
-import type { Produto } from "@/data/produtos";
-import {
-  Badge,
-  Button,
-  Container,
-  SectionTitle,
-  buttonStyles,
-} from "@/components/ui";
+import { useEffect, useMemo, useState, useTransition } from "react";
+import type { Produto, SelecaoProduto } from "@/data/produtos";
+import { Button, Container, SectionTitle, buttonStyles } from "@/components/ui";
 import { useCatalog } from "@/components/catalog/catalog-provider";
 import { QuotePanel } from "@/components/catalog/quote-panel";
 import { ProductCard } from "@/components/home/product-card";
+import { ProductImage } from "@/components/product/product-image";
+import { ProductPrice } from "@/components/product/product-price";
 import { whatsappUrl } from "@/utils/whatsapp";
+import { criarMensagemOrcamento } from "@/utils/quote-message";
+import { formatarMoeda, precoAtual } from "@/utils/product-price";
+import {
+  comSelecao,
+  mesmoProduto,
+  selecaoInicial,
+} from "@/utils/product-variants";
 
 export function ProductLoadError() {
   const router = useRouter();
@@ -47,6 +51,89 @@ export function ProductLoadError() {
     </main>
   );
 }
+
+function VariationOptions({
+  produto,
+  selecao,
+  onChange,
+}: {
+  produto: Produto;
+  selecao: SelecaoProduto;
+  onChange: (selecao: SelecaoProduto) => void;
+}) {
+  return (
+    <div className="mt-7 space-y-6">
+      {produto.variacoes?.armazenamento?.length ? (
+        <fieldset>
+          <legend className="text-sm font-semibold text-foreground">
+            Armazenamento
+          </legend>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {produto.variacoes.armazenamento.map((valor) => (
+              <button
+                key={valor}
+                type="button"
+                className={`product-option ${selecao.armazenamento === valor ? "is-selected" : ""}`}
+                aria-pressed={selecao.armazenamento === valor}
+                onClick={() => onChange({ ...selecao, armazenamento: valor })}
+              >
+                {valor}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+      ) : null}
+
+      {produto.variacoes?.cores?.length ? (
+        <fieldset>
+          <legend className="text-sm font-semibold text-foreground">Cor</legend>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {produto.variacoes.cores.map((cor) => (
+              <button
+                key={cor.nome}
+                type="button"
+                className={`product-option product-option--color ${selecao.cor === cor.nome ? "is-selected" : ""}`}
+                aria-pressed={selecao.cor === cor.nome}
+                onClick={() => onChange({ ...selecao, cor: cor.nome })}
+              >
+                <span
+                  className="product-color-swatch"
+                  style={{ backgroundColor: cor.hex ?? "#dedfe3" }}
+                  aria-hidden="true"
+                />
+                {cor.nome}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+      ) : null}
+
+      {produto.variacoes?.modelosCompativeis?.length ? (
+        <fieldset>
+          <legend className="text-sm font-semibold text-foreground">
+            Modelo compatível
+          </legend>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {produto.variacoes.modelosCompativeis.map((modelo) => (
+              <button
+                key={modelo}
+                type="button"
+                className={`product-option ${selecao.modeloCompativel === modelo ? "is-selected" : ""}`}
+                aria-pressed={selecao.modeloCompativel === modelo}
+                onClick={() =>
+                  onChange({ ...selecao, modeloCompativel: modelo })
+                }
+              >
+                {modelo}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+      ) : null}
+    </div>
+  );
+}
+
 export function ProductDetail({
   produto,
   related,
@@ -55,28 +142,37 @@ export function ProductDetail({
   related: Produto[];
 }) {
   const { carrinho, adicionarAoCarrinho } = useCatalog();
-  const [feedback, setFeedback] = useState<{
-    nome: string;
-    time: number;
-  } | null>(null);
+  const [selecao, setSelecao] = useState<SelecaoProduto>(() =>
+    selecaoInicial(produto),
+  );
+  const [quantidadeDesejada, setQuantidadeDesejada] = useState(1);
+  const [feedback, setFeedback] = useState(false);
+  const produtoSelecionado = useMemo(
+    () => comSelecao(produto, selecao),
+    [produto, selecao],
+  );
+
   useEffect(() => {
     if (!feedback) return;
-    const timer = window.setTimeout(() => setFeedback(null), 2800);
+    const timer = window.setTimeout(() => setFeedback(false), 2800);
     return () => window.clearTimeout(timer);
   }, [feedback]);
-  function add(item: Produto) {
-    adicionarAoCarrinho(item);
-    setFeedback({ nome: item.nome, time: Date.now() });
-  }
-  const quantidade = (item: Produto) =>
-    carrinho.find(
-      (p) =>
-        p.id === item.id && p.nome === item.nome && p.dosagem === item.dosagem,
-    )?.quantidade ?? 0;
+
+  const quantidadeNoCarrinho =
+    carrinho.find((item) => mesmoProduto(item, produtoSelecionado))
+      ?.quantidade ?? 0;
   const categoryHref = `/produtos?categoria=${encodeURIComponent(produto.categoria)}`;
-  const contact = whatsappUrl(
-    `Olá! Gostaria de consultar a disponibilidade de ${produto.nome} ${produto.dosagem}.${produto.exigeReceita ? " Estou ciente de que este produto exige apresentação de receita médica." : ""}`,
-  );
+  const mensagemWhatsApp = criarMensagemOrcamento({
+    itens: [{ ...produtoSelecionado, quantidade: quantidadeDesejada }],
+    endereco: "",
+    formaPagamento: "Não informar",
+  });
+
+  function adicionar() {
+    adicionarAoCarrinho(produtoSelecionado, quantidadeDesejada);
+    setFeedback(true);
+  }
+
   return (
     <main id="catalogo" tabIndex={-1} className="flex-1">
       <Container className="py-8 md:py-12">
@@ -97,98 +193,123 @@ export function ProductDetail({
           </Link>
           <span aria-hidden="true">›</span>
           <span aria-current="page" className="text-brand">
-            {produto.nome} {produto.dosagem}
+            {produto.nome}
           </span>
         </nav>
+
         <section
-          className="grid items-center gap-8 md:grid-cols-2 lg:gap-16"
+          className="product-detail-grid grid items-start gap-9 lg:grid-cols-2 lg:gap-16"
           aria-label="Detalhes do produto"
         >
-          <div
-            className="product-visual"
-            aria-label="Embalagem conceitual ilustrativa, não representa o produto real"
-            role="img"
-          >
-            <div className="product-visual-shape" />
-            <div className="product-mockup">
-              <span className="text-lg font-bold text-brand">RodeVita</span>
-              <span className="text-xs text-health">Drogaria & Bem-estar</span>
-              <div className="product-monogram">
-                {produto.nome
-                  .split(/\s+/)
-                  .slice(0, 2)
-                  .map((word) => word[0])
-                  .join("")}
-              </div>
-              <strong className="break-words text-xl text-brand">
-                {produto.nome}
-              </strong>
-              <span className="mt-2 text-sm text-muted">{produto.dosagem}</span>
-              <span className="mt-auto pt-5 text-xs text-health">
-                Cuidado para todos os dias.
-              </span>
-            </div>
-            <p className="relative mt-7 text-center text-[10px] uppercase tracking-widest text-muted">
-              Embalagem conceitual · Imagem ilustrativa
-            </p>
-          </div>
-          <div className="min-w-0">
-            <Link
-              href={categoryHref}
-              className="eyebrow inline-block hover:underline"
-            >
-              {produto.categoria}
-            </Link>
-            <SectionTitle as="h1" className="break-words text-3xl md:text-4xl">
+          <ProductImage produto={produto} priority />
+
+          <div className="min-w-0 lg:py-4">
+            <p className="eyebrow">{produto.marca ?? "RODE Celulares"}</p>
+            <SectionTitle as="h1" className="break-words text-3xl md:text-5xl">
               {produto.nome}
             </SectionTitle>
-            <p className="mt-3 text-xl text-muted">{produto.dosagem}</p>
-            <div className="mt-6">
-              <Badge variant={produto.exigeReceita ? "prescription" : "free"} />
-            </div>
-            <p className="mt-6 max-w-lg leading-relaxed text-muted">
-              Consulte disponibilidade e condições de atendimento diretamente
-              com a farmácia.
+            <p className="mt-5 max-w-xl leading-relaxed text-muted">
+              {produto.descricao ??
+                "Conheça este produto e consulte com nossa equipe as opções disponíveis."}
             </p>
-            <div className="mt-8 flex flex-col gap-3">
-              <Button onClick={() => add(produto)}>
-                Adicionar ao orçamento
+            <ProductPrice
+              className="mt-6"
+              precoOriginal={produto.precoOriginal ?? produto.preco}
+              precoPromocional={produto.precoPromocional}
+              temPromocao={produto.temPromocao}
+              size="detail"
+              showBadge
+            />
+
+            <VariationOptions
+              produto={produto}
+              selecao={selecao}
+              onChange={setSelecao}
+            />
+
+            <div className="mt-7">
+              <p className="text-sm font-semibold text-foreground">
+                Quantidade
+              </p>
+              <div className="mt-3 flex w-fit items-center rounded-xl border border-border bg-surface p-1">
+                <button
+                  type="button"
+                  className="product-quantity-button"
+                  aria-label="Diminuir quantidade"
+                  disabled={quantidadeDesejada === 1}
+                  onClick={() =>
+                    setQuantidadeDesejada((atual) => Math.max(1, atual - 1))
+                  }
+                >
+                  −
+                </button>
+                <span
+                  className="min-w-12 text-center font-semibold"
+                  aria-live="polite"
+                >
+                  {quantidadeDesejada}
+                </span>
+                <button
+                  type="button"
+                  className="product-quantity-button"
+                  aria-label="Aumentar quantidade"
+                  onClick={() => setQuantidadeDesejada((atual) => atual + 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <Button onClick={adicionar} className="w-full">
+                Adicionar ao carrinho
               </Button>
               <a
-                href={contact}
+                href={whatsappUrl(mensagemWhatsApp)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={buttonStyles("secondary")}
+                className={buttonStyles("whatsapp", "w-full")}
               >
                 Consultar pelo WhatsApp
               </a>
             </div>
             <p className="mt-4 min-h-5 text-sm text-health" aria-live="polite">
-              {quantidade(produto) > 0
-                ? `${quantidade(produto)} na sua lista de orçamento`
-                : ""}
+              {feedback
+                ? `${quantidadeDesejada} ${quantidadeDesejada === 1 ? "item adicionado" : "itens adicionados"} ao carrinho.`
+                : quantidadeNoCarrinho > 0
+                  ? `${quantidadeNoCarrinho} desta opção no carrinho.`
+                  : ""}
             </p>
-            <Link
-              href="#orcamento"
-              className="mt-2 inline-block text-sm font-semibold text-health underline underline-offset-4"
-            >
-              Ver meu orçamento
-            </Link>
           </div>
         </section>
-        <section className="ui-card mt-12" aria-labelledby="product-info">
+
+        <section
+          className="product-service-strip mt-12"
+          aria-label="Informações de atendimento"
+        >
+          {[
+            "Atendimento rápido pelo WhatsApp",
+            "Consulte disponibilidade",
+            "Consulte formas de pagamento",
+            "Retirada em uma de nossas unidades",
+          ].map((texto) => (
+            <div key={texto} className="product-service-item">
+              <span aria-hidden="true">✓</span>
+              <p>{texto}</p>
+            </div>
+          ))}
+        </section>
+
+        <section className="ui-card mt-10" aria-labelledby="product-info">
           <SectionTitle id="product-info" className="text-2xl">
             Informações do produto
           </SectionTitle>
           <dl className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {[
-              ["Nome", produto.nome],
-              ["Dosagem", produto.dosagem],
+              ["Produto", produto.nome],
+              ["Marca", produto.marca ?? "Consulte nossa equipe"],
               ["Categoria", produto.categoria],
-              [
-                "Necessidade de receita",
-                produto.exigeReceita ? "Exige receita" : "Venda livre",
-              ],
+              ["Preço atual", formatarMoeda(precoAtual(produto))],
             ].map(([label, value]) => (
               <div key={label}>
                 <dt className="text-xs text-muted">{label}</dt>
@@ -197,35 +318,9 @@ export function ProductDetail({
             ))}
           </dl>
         </section>
-        {produto.exigeReceita && (
-          <section className="mt-6 rounded-2xl border border-gold bg-warning-soft p-6 text-warning">
-            <h2 className="font-semibold">
-              Este produto exige apresentação de receita médica.
-            </h2>
-            <p className="mt-2 text-sm leading-relaxed">
-              A dispensação está sujeita à apresentação e validação da receita
-              conforme a legislação aplicável.
-            </p>
-          </section>
-        )}
-        <section className="py-14">
-          <p className="eyebrow">Simples do começo ao fim</p>
-          <SectionTitle className="text-2xl">Como solicitar</SectionTitle>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            {[
-              "Adicione ao orçamento",
-              "Continue escolhendo seus produtos",
-              "Envie sua lista pelo WhatsApp",
-            ].map((text, i) => (
-              <div className="step" key={text}>
-                <span className="step-number">0{i + 1}</span>
-                <h3 className="mt-4 font-semibold text-brand">{text}</h3>
-              </div>
-            ))}
-          </div>
-        </section>
+
         {related.length > 0 && (
-          <section aria-labelledby="related-title" className="py-6">
+          <section aria-labelledby="related-title" className="py-14">
             <div className="section-heading">
               <SectionTitle id="related-title" className="text-2xl">
                 Produtos relacionados
@@ -239,55 +334,23 @@ export function ProductDetail({
             </div>
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
               {related.map((item) => (
-                <ProductCard
-                  key={item.id}
-                  produto={item}
-                  onAdd={add}
-                  quantidade={quantidade(item)}
-                />
+                <ProductCard key={item.id} produto={item} />
               ))}
             </div>
           </section>
         )}
-        <section className="final-cta my-12">
-          <SectionTitle className="text-3xl">Precisa de ajuda?</SectionTitle>
-          <p className="mt-4 text-muted">
-            Fale com nossa equipe pelo WhatsApp para consultar disponibilidade.
-          </p>
-          <a
-            href={contact}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={buttonStyles("whatsapp", "mt-6")}
-          >
-            Falar pelo WhatsApp
-          </a>
-        </section>
-        <div className="mx-auto max-w-3xl">
+
+        <div className="mx-auto my-12 max-w-3xl">
           <QuotePanel />
         </div>
-        <Link
-          href="/produtos"
-          className="mt-10 inline-block font-semibold text-health"
-        >
+        <Link href="/produtos" className="font-semibold text-health">
           ← Voltar para produtos
         </Link>
         <p className="mt-6 text-xs leading-relaxed text-muted">
-          Catálogo demonstrativo. Produtos e informações apresentados neste
-          projeto são fictícios e não representam disponibilidade comercial.
+          Catálogo demonstrativo. Produtos, preços e informações apresentados
+          neste projeto são fictícios e não representam disponibilidade
+          comercial.
         </p>
-        <div
-          role="status"
-          aria-live="polite"
-          className={feedback ? "catalog-feedback" : "sr-only"}
-        >
-          {feedback && (
-            <>
-              <strong className="block">Adicionado ao orçamento</strong>
-              <span className="text-xs">{feedback.nome}</span>
-            </>
-          )}
-        </div>
       </Container>
     </main>
   );

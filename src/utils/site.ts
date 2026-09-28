@@ -1,5 +1,5 @@
 const DEVELOPMENT_URL = "http://localhost:3000";
-const PRODUCTION_FALLBACK_URL = "https://rodevita.example";
+const PRODUCTION_FALLBACK_URL = "https://rodecelulares.example";
 
 function fallbackUrl() {
   return process.env.NODE_ENV === "production"

@@ -5,51 +5,79 @@ import {
   InstitutionalHero,
   InstitutionalIcon,
 } from "@/components/institutional/shared";
+
 export const metadata: Metadata = {
-  title: "Sobre a RodeVita",
+  title: "Sobre",
   description:
-    "Conheça a RodeVita, marca fictícia e projeto conceitual da RODE Soluções Inteligentes para demonstrar soluções digitais para farmácias.",
+    "Conheça o propósito demonstrativo da RODE Celulares e sua experiência de tecnologia e atendimento próximo.",
   alternates: { canonical: "/sobre" },
 };
+
 const pillars = [
   {
-    title: "Cuidado",
-    text: "Uma experiência pensada para ser simples, acolhedora e humana.",
-    icon: "heart",
-  },
-  {
-    title: "Praticidade",
-    text: "Informações organizadas e acesso rápido ao que o cliente procura.",
-    icon: "search",
-  },
-  {
-    title: "Tecnologia",
-    text: "Ferramentas digitais que aproximam o atendimento do dia a dia.",
+    title: "Tecnologia para o dia a dia",
+    text: "Produtos e soluções pensados para uma rotina mais prática e conectada.",
     icon: "digital",
   },
+  {
+    title: "Atendimento próximo",
+    text: "Uma equipe acessível para ajudar você a encontrar o que procura.",
+    icon: "chat",
+  },
+  {
+    title: "Duas unidades",
+    text: "Mais opções para escolher a unidade mais conveniente para você.",
+    icon: "store",
+  },
+  {
+    title: "Smartphones e acessórios",
+    text: "Uma seleção de celulares e itens para completar sua experiência.",
+    icon: "device",
+  },
 ] as const;
+
 export default function AboutPage() {
   return (
     <main id="catalogo" tabIndex={-1} className="flex-1">
       <InstitutionalHero
-        eyebrow="Sobre a RodeVita"
-        title="Cuidado para todos os dias."
-        description="A RodeVita é uma marca fictícia criada para demonstrar como tecnologia, organização e proximidade podem transformar a experiência digital de uma drogaria."
+        eyebrow="Nossa marca"
+        title="Sobre a RODE Celulares"
+        description="Tecnologia, praticidade e atendimento para manter você conectado ao que importa."
       />
-      <Container className="py-14">
-        <section className="grid gap-10 lg:grid-cols-[.8fr_1.5fr]">
+      <Container className="py-14 md:py-20">
+        <section className="grid items-start gap-10 lg:grid-cols-[.8fr_1.2fr]">
           <div>
-            <p className="eyebrow">O que nos inspira</p>
-            <SectionTitle className="text-3xl">Nossa essência</SectionTitle>
-            <p className="mt-5 leading-relaxed text-muted">
-              Um conceito de marca que coloca a experiência das pessoas no
-              centro, do primeiro acesso à organização de uma lista de produtos.
+            <p className="eyebrow">Nosso propósito</p>
+            <SectionTitle className="text-3xl md:text-4xl">
+              Tecnologia mais próxima de você
+            </SectionTitle>
+          </div>
+          <div className="max-w-2xl space-y-5 leading-relaxed text-muted">
+            <p>
+              A RODE Celulares nasceu com o propósito de aproximar tecnologia,
+              praticidade e atendimento de qualidade.
+            </p>
+            <p>
+              Trabalhamos com smartphones, acessórios e soluções para manter
+              você sempre conectado, com uma experiência simples desde a busca
+              pelo produto até a conversa com nossa equipe.
             </p>
           </div>
-          <div className="grid gap-5 sm:grid-cols-3">
+        </section>
+
+        <section className="mt-14 md:mt-20" aria-labelledby="pilares-titulo">
+          <div className="section-heading">
+            <div>
+              <p className="eyebrow">O que você encontra</p>
+              <SectionTitle id="pilares-titulo" className="text-3xl">
+                Uma experiência feita para conectar
+              </SectionTitle>
+            </div>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {pillars.map((pillar) => (
-              <Card key={pillar.title}>
-                <span className="text-health">
+              <Card key={pillar.title} className="h-full">
+                <span className="category-icon">
                   <InstitutionalIcon kind={pillar.icon} />
                 </span>
                 <h3 className="mt-6 text-lg font-bold text-brand">
@@ -62,68 +90,19 @@ export default function AboutPage() {
             ))}
           </div>
         </section>
-        <section className="my-16 rounded-3xl bg-brand-soft p-7 md:p-12">
-          <p className="eyebrow">Do primeiro clique à conversa</p>
-          <SectionTitle className="text-3xl">
-            Uma experiência conectada
+
+        <section className="mt-14 rounded-3xl bg-brand p-8 text-surface md:mt-20 md:p-12">
+          <p className="eyebrow">Explore a RODE</p>
+          <SectionTitle className="max-w-2xl text-3xl text-surface md:text-4xl">
+            Encontre seu próximo smartphone ou acessório
           </SectionTitle>
-          <p className="mt-4 max-w-2xl leading-relaxed text-muted">
-            Navegue pelo catálogo, encontre o que procura e organize os itens em
-            um orçamento. A lista acompanha você até o WhatsApp.
+          <p className="mt-4 max-w-xl leading-relaxed text-surface/70">
+            Consulte o catálogo demonstrativo e fale com nossa equipe quando
+            precisar.
           </p>
-          <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              ["Catálogo digital", "Explore as categorias."],
-              ["Busca", "Encontre nome ou dosagem."],
-              ["Orçamento", "Reúna sua lista de produtos."],
-              ["WhatsApp", "Leve a lista para a conversa."],
-            ].map(([title, text], index) => (
-              <li className="rounded-2xl bg-surface p-5" key={title}>
-                <div className="flex justify-between text-sm font-semibold text-health">
-                  <span>0{index + 1}</span>
-                  {index < 3 && <span aria-hidden="true">→</span>}
-                </div>
-                <h3 className="mt-4 font-bold text-brand">{title}</h3>
-                <p className="mt-2 text-xs leading-relaxed text-muted">
-                  {text}
-                </p>
-              </li>
-            ))}
-          </ol>
-          <Link href="/produtos" className={buttonStyles("secondary", "mt-8")}>
-            Explorar o catálogo ↗
+          <Link href="/produtos" className={buttonStyles("primary", "mt-7")}>
+            Conheça nossos produtos
           </Link>
-        </section>
-        <section className="institutional-project">
-          <div>
-            <p className="eyebrow">Conceito, design e tecnologia</p>
-            <SectionTitle className="text-3xl">
-              Projeto demonstrativo
-            </SectionTitle>
-            <p className="mt-5 max-w-2xl leading-relaxed text-muted">
-              A RodeVita foi criada como projeto conceitual da RODE Soluções
-              Inteligentes para demonstrar soluções digitais para farmácias. A
-              marca, os produtos e os serviços apresentados são fictícios. Este
-              site não realiza vendas nem presta atendimento farmacêutico real.
-            </p>
-          </div>
-          <div className="rounded-2xl border border-border bg-surface p-8">
-            <p className="text-xs uppercase tracking-widest text-muted">
-              Desenvolvido por
-            </p>
-            <h3 className="mt-4 text-xl font-bold text-brand">
-              RODE Soluções Inteligentes
-            </h3>
-            <a
-              href="https://rodesolucoes.com.br"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonStyles("primary", "mt-6")}
-              aria-label="Conhecer a RODE (abre em nova aba)"
-            >
-              Conhecer a RODE ↗
-            </a>
-          </div>
         </section>
       </Container>
     </main>

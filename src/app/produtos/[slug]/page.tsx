@@ -10,6 +10,16 @@ import {
 } from "@/components/product/product-detail";
 
 type Props = { params: Promise<{ slug: string }> };
+
+function productDisplayName(nome: string, armazenamento: string) {
+  const nomeNormalizado = nome.toLocaleLowerCase("pt-BR");
+  const armazenamentoNormalizado = armazenamento.toLocaleLowerCase("pt-BR");
+
+  return armazenamentoNormalizado && !nomeNormalizado.includes(armazenamentoNormalizado)
+    ? `${nome} ${armazenamento}`
+    : nome;
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const { products, error } = await getProductCatalog();
@@ -19,9 +29,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: error ? "Produto indisponível" : "Produto não encontrado",
       robots: { index: false, follow: true },
     };
+  const nomeExibicao = productDisplayName(produto.nome, produto.dosagem);
+
   return {
-    title: `${produto.nome} ${produto.dosagem}`,
-    description: `${produto.nome} ${produto.dosagem}, da categoria ${produto.categoria}, no catálogo demonstrativo da RodeVita.`,
+    title: nomeExibicao,
+    description: `${nomeExibicao}, da categoria ${produto.categoria}, no catálogo demonstrativo da RODE Celulares.`,
     alternates: {
       canonical: `/produtos/${productSlug(produto)}`,
     },
@@ -40,6 +52,7 @@ export default async function ProductPage({ params }: Props) {
     )
     .slice(0, 4);
   const productPath = `/produtos/${productSlug(produto)}`;
+  const nomeExibicao = productDisplayName(produto.nome, produto.dosagem);
   const breadcrumbData = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -67,7 +80,7 @@ export default async function ProductPage({ params }: Props) {
       {
         "@type": "ListItem",
         position: 4,
-        name: `${produto.nome} ${produto.dosagem}`,
+        name: nomeExibicao,
         item: absoluteUrl(productPath),
       },
     ],

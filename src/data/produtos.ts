@@ -1,52 +1,42 @@
-export type Produto = {
-  id: number;
+export type CorProduto = {
   nome: string;
-  dosagem: string;
-  categoria: string;
-  exigeReceita: boolean;
+  hex?: string;
 };
 
-export const produtos: Produto[] = [
-  {
-    id: 1,
-    nome: "Dipirona",
-    dosagem: "500 mg",
-    categoria: "Analgésicos",
-    exigeReceita: false,
-  },
-  {
-    id: 2,
-    nome: "Paracetamol",
-    dosagem: "750 mg",
-    categoria: "Analgésicos",
-    exigeReceita: false,
-  },
-  {
-    id: 3,
-    nome: "Amoxicilina",
-    dosagem: "500 mg",
-    categoria: "Antibióticos",
-    exigeReceita: true,
-  },
-  {
-    id: 4,
-    nome: "Losartana",
-    dosagem: "50 mg",
-    categoria: "Pressão arterial",
-    exigeReceita: true,
-  },
-  {
-    id: 5,
-    nome: "Loratadina",
-    dosagem: "10 mg",
-    categoria: "Antialérgicos",
-    exigeReceita: false,
-  },
-  {
-    id: 6,
-    nome: "Vitamina C",
-    dosagem: "1 g",
-    categoria: "Vitaminas",
-    exigeReceita: false,
-  },
-];
+export type VariacoesProduto = {
+  armazenamento?: string[];
+  cores?: CorProduto[];
+  modelosCompativeis?: string[];
+};
+
+export type SelecaoProduto = {
+  armazenamento?: string;
+  cor?: string;
+  modeloCompativel?: string;
+};
+
+export type Produto = {
+  id: number;
+  slug?: string;
+  nome: string;
+  marca?: string;
+  modelo?: string;
+  categoria: string;
+  armazenamento?: string;
+  dosagem: string;
+  exigeReceita: boolean;
+  descricao?: string;
+  precoOriginal?: number;
+  precoPromocional?: number | null;
+  temPromocao: boolean;
+  destaque: boolean;
+  ativo: boolean;
+  /** Compatibilidade com itens persistidos antes da estrutura promocional. */
+  preco?: number;
+  imagem?: string;
+  variacoes?: VariacoesProduto;
+};
+
+export type ProdutoSelecionado = Produto & {
+  selecao?: SelecaoProduto;
+};

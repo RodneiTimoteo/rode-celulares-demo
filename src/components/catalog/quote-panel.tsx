@@ -1,6 +1,8 @@
 "use client";
 import { Button } from "@/components/ui";
 import { FORMAS_PAGAMENTO, type FormaPagamento } from "@/utils/quote-message";
+import { chaveProduto, linhasVariacao } from "@/utils/product-variants";
+import { formatarMoeda, precoAtual } from "@/utils/product-price";
 import { useCatalog } from "./catalog-provider";
 export function QuotePanel({ className = "" }: { className?: string }) {
   const {
@@ -38,14 +40,24 @@ export function QuotePanel({ className = "" }: { className?: string }) {
         <div className="mt-6 space-y-4">
           {carrinho.map((item) => (
             <div
-              key={JSON.stringify([item.id, item.nome, item.dosagem])}
+              key={chaveProduto(item)}
               className="border-b border-border pb-4"
             >
               <div className="flex justify-between gap-4">
                 <div>
                   <h3 className="font-semibold text-foreground">{item.nome}</h3>
-
-                  <p className="text-sm text-muted">{item.dosagem}</p>
+                  {linhasVariacao(item).length ? (
+                    <ul className="mt-1 space-y-0.5 text-sm text-muted">
+                      {linhasVariacao(item).map((linha) => (
+                        <li key={linha}>{linha}</li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-muted">{item.dosagem}</p>
+                  )}
+                  <p className="mt-2 text-sm font-semibold text-foreground">
+                    {formatarMoeda(precoAtual(item))}
+                  </p>
                 </div>
 
                 <button
@@ -80,12 +92,6 @@ export function QuotePanel({ className = "" }: { className?: string }) {
                   +
                 </button>
               </div>
-
-              {item.exigeReceita && (
-                <p className="mt-3 text-xs font-medium text-warning">
-                  Este produto exige receita médica.
-                </p>
-              )}
             </div>
           ))}
         </div>

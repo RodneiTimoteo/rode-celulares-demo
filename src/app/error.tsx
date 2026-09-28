@@ -8,7 +8,7 @@ export default function ErrorPage({ retry }: { retry: () => void }) {
     <main id="catalogo" tabIndex={-1} className="flex-1">
       <Container className="py-16 md:py-24">
         <section role="alert" className="ui-card mx-auto max-w-3xl py-12 text-center md:py-16">
-          <p className="eyebrow">RodeVita</p>
+          <p className="eyebrow">RODE Celulares</p>
           <SectionTitle as="h1" className="text-3xl md:text-4xl">
             Algo não saiu como esperado.
           </SectionTitle>

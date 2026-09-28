@@ -1,17 +1,9 @@
 import { ImageResponse } from "next/og";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-
-export const alt = "RodeVita — Drogaria & Bem-estar. Cuidado para todos os dias.";
+export const alt = "RODE Celulares — Conectando você com o que importa.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default async function OpenGraphImage() {
-  const logo = await readFile(
-    join(process.cwd(), "public", "brand", "rodevita-logo-horizontal.png"),
-  );
-  const logoDataUrl = `data:image/png;base64,${logo.toString("base64")}`;
-
+export default function OpenGraphImage() {
   return new ImageResponse(
     <div
       style={{
@@ -20,8 +12,8 @@ export default async function OpenGraphImage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        background: "#f8faf9",
-        color: "#0b3d4a",
+        background: "#f4f5f7",
+        color: "#17181c",
         padding: "76px 88px",
         position: "relative",
         overflow: "hidden",
@@ -35,14 +27,10 @@ export default async function OpenGraphImage() {
           alignItems: "flex-start",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={logoDataUrl}
-          alt=""
-          width={360}
-          height={126}
-          style={{ objectFit: "contain", objectPosition: "left center" }}
-        />
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <div style={{ width: 70, height: 70, borderRadius: 18, background: "#17181c", color: "#ff6b00", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 40, fontWeight: 800 }}>R</div>
+          <div style={{ display: "flex", fontSize: 38, fontWeight: 800 }}>RODE&nbsp;<span style={{ color: "#ff6b00" }}>Celulares</span></div>
+        </div>
         <div
           style={{
             marginTop: 58,
@@ -52,10 +40,10 @@ export default async function OpenGraphImage() {
             letterSpacing: "-2px",
           }}
         >
-          Cuidado para todos os dias.
+          Conectando você com o que importa.
         </div>
         <div style={{ marginTop: 28, fontSize: 24, color: "#66777d" }}>
-          Uma experiência digital de drogaria e bem-estar.
+          Smartphones, acessórios e tecnologia.
         </div>
       </div>
       <div
@@ -63,8 +51,8 @@ export default async function OpenGraphImage() {
           width: 360,
           height: 360,
           borderRadius: 180,
-          background: "#eaf4ef",
-          border: "2px solid #d4b574",
+          background: "#fff0e6",
+          border: "2px solid #ff6b00",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -77,7 +65,7 @@ export default async function OpenGraphImage() {
             height: 250,
             borderRadius: 28,
             background: "#ffffff",
-            boxShadow: "0 24px 60px rgba(11, 61, 74, 0.14)",
+            boxShadow: "0 24px 60px rgba(23, 24, 28, 0.18)",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -85,17 +73,17 @@ export default async function OpenGraphImage() {
             transform: "rotate(8deg)",
           }}
         >
-          <div style={{ fontSize: 34, fontWeight: 700 }}>RodeVita</div>
+          <div style={{ fontSize: 30, fontWeight: 700 }}>RODE</div>
           <div
             style={{
               marginTop: 14,
               width: 110,
               height: 4,
-              background: "#d4b574",
+              background: "#ff6b00",
             }}
           />
-          <div style={{ marginTop: 18, fontSize: 17, color: "#2e7d6b" }}>
-            BEM-ESTAR
+          <div style={{ marginTop: 18, fontSize: 17, color: "#ff6b00" }}>
+            TECNOLOGIA
           </div>
         </div>
       </div>
@@ -106,7 +94,7 @@ export default async function OpenGraphImage() {
           bottom: 0,
           width: "100%",
           height: 14,
-          background: "#2e7d6b",
+          background: "#ff6b00",
         }}
       />
     </div>,

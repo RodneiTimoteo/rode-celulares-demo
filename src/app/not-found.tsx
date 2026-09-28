@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import symbol from "../../public/brand/rodevita-simbolo.png";
+import symbol from "../../public/brand/rode-celulares-symbol.svg";
 import { Container, SectionTitle, buttonStyles } from "@/components/ui";
 
 export default function NotFound() {
@@ -11,7 +11,7 @@ export default function NotFound() {
           <div className="mx-auto mb-7 flex h-28 w-28 items-center justify-center rounded-full bg-health-soft">
             <Image
               src={symbol}
-              alt="Símbolo RodeVita"
+              alt="Símbolo RODE Celulares"
               width={76}
               sizes="76px"
               loading="eager"

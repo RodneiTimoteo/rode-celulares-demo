@@ -8,33 +8,33 @@ import {
 export const metadata: Metadata = {
   title: "Serviços",
   description:
-    "Conheça os serviços demonstrativos da RodeVita. Conteúdo fictício para apresentar a experiência digital de uma drogaria, sem atendimento real.",
+    "Conheça os serviços demonstrativos da RODE Celulares. Conteúdo fictício para apresentar a experiência de uma loja de tecnologia, sem atendimento real.",
   alternates: { canonical: "/servicos" },
 };
 const services = [
   {
-    title: "Aferição de pressão",
-    icon: "pressure",
+    title: "Configuração inicial",
+    icon: "digital",
     description:
-      "Uma apresentação conceitual de um espaço dedicado à medição de pressão.",
+      "Uma apresentação conceitual do suporte para configurar um novo aparelho.",
   },
   {
-    title: "Aferição de glicemia",
-    icon: "drop",
+    title: "Transferência de dados",
+    icon: "phone",
     description:
-      "Exemplo de como consultar informações sobre esse serviço em um canal digital.",
+      "Exemplo de apoio para levar contatos e arquivos ao seu novo dispositivo.",
   },
   {
-    title: "Orientação farmacêutica",
+    title: "Orientação de compra",
     icon: "chat",
     description:
       "Uma proposta de contato próximo para esclarecer dúvidas sobre o atendimento.",
   },
   {
-    title: "Aplicação de injetáveis",
-    icon: "injection",
+    title: "Instalação de acessórios",
+    icon: "digital",
     description:
-      "Demonstração de um canal para consultar condições e disponibilidade do serviço.",
+      "Demonstração de um atendimento para aplicação e ajuste de acessórios.",
   },
   {
     title: "Entrega local",
@@ -54,8 +54,8 @@ export default function ServicesPage() {
     <main id="catalogo" tabIndex={-1} className="flex-1">
       <InstitutionalHero
         eyebrow="Serviços"
-        title="Mais cuidado, mais perto de você."
-        description="Conheça alguns serviços que uma drogaria moderna pode oferecer."
+        title="Mais tecnologia, mais perto de você."
+        description="Conheça alguns serviços que uma loja de celulares moderna pode oferecer."
         note="Serviços apresentados neste projeto são demonstrativos e não representam atendimento real."
       />
       <Container className="py-12">
@@ -95,8 +95,8 @@ export default function ServicesPage() {
           </p>
         </section>
         <WhatsAppCta
-          title="O cuidado começa com uma conversa."
-          text="Conheça o canal demonstrativo de atendimento da RodeVita."
+          title="A escolha certa começa com uma conversa."
+          text="Conheça o canal demonstrativo de atendimento da RODE Celulares."
         />
       </Container>
     </main>

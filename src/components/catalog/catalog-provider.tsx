@@ -6,23 +6,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Produto } from "@/data/produtos";
-import { fetchProducts, type ProdutoApi } from "@/services/products";
+import type { ProdutoSelecionado } from "@/data/produtos";
+import { getProducts, type ProdutoApi } from "@/services/products";
 import {
   criarMensagemOrcamento,
   isFormaPagamento,
   type FormaPagamento,
 } from "@/utils/quote-message";
 import { whatsappUrl } from "@/utils/whatsapp";
+import { mesmoProduto } from "@/utils/product-variants";
 
 const CART_STORAGE_KEY = "carrinho-drogaria-luisa";
 const ADDRESS_STORAGE_KEY = "rodevita-endereco-orcamento";
 const PAYMENT_STORAGE_KEY = "rodevita-pagamento-orcamento";
-function mesmoProduto(a: Produto, b: Produto): boolean {
-  return a.id === b.id && a.nome === b.nome && a.dosagem === b.dosagem;
-}
-
-type ItemCarrinho = Produto & {
+export type ItemCarrinho = ProdutoSelecionado & {
   quantidade: number;
 };
 
@@ -52,21 +49,28 @@ function useCatalogState() {
 
     async function carregarProdutos() {
       try {
-        const dados = await fetchProducts(controller.signal);
+        const dados = await getProducts(controller.signal);
         if (ativo) setProdutos(dados);
       } catch (error) {
         if (ativo) {
-          console.error("[RodeVita] Falha ao consultar a API de produtos", {
-            tipo: controller.signal.aborted
-              ? "timeout"
-              : error instanceof Error
-                ? error.name
-                : "desconhecido",
-            detalhe:
-              error instanceof Error ? error.message : "Falha desconhecida",
-          });
+          if (process.env.NODE_ENV === "development") {
+            console.error(
+              "[RODE Celulares] Falha ao consultar a API de produtos",
+              {
+                tipo: controller.signal.aborted
+                  ? "timeout"
+                  : error instanceof Error
+                    ? error.name
+                    : "desconhecido",
+                detalhe:
+                  error instanceof Error
+                    ? error.message
+                    : "Falha desconhecida",
+              },
+            );
+          }
           setErroProdutos(
-            "Não foi possível carregar os produtos agora. Tente atualizar a página em alguns instantes. Os itens do seu carrinho foram mantidos.",
+            "Não foi possível carregar os produtos no momento. Tente novamente em instantes. Os itens do seu carrinho foram mantidos.",
           );
         }
       } finally {
@@ -145,7 +149,8 @@ function useCatalogState() {
     localStorage.setItem(PAYMENT_STORAGE_KEY, formaPagamento);
   }, [carrinhoCarregado, formaPagamento]);
 
-  function adicionarAoCarrinho(produto: Produto) {
+  function adicionarAoCarrinho(produto: ProdutoSelecionado, quantidade = 1) {
+    const quantidadeNormalizada = Math.max(1, Math.floor(quantidade));
     setCarrinho((carrinhoAtual) => {
       const produtoExistente = carrinhoAtual.find((item) =>
         mesmoProduto(item, produto),
@@ -154,16 +159,22 @@ function useCatalogState() {
       if (produtoExistente) {
         return carrinhoAtual.map((item) =>
           mesmoProduto(item, produto)
-            ? { ...item, quantidade: item.quantidade + 1 }
+            ? {
+                ...item,
+                quantidade: item.quantidade + quantidadeNormalizada,
+              }
             : item,
         );
       }
 
-      return [...carrinhoAtual, { ...produto, quantidade: 1 }];
+      return [
+        ...carrinhoAtual,
+        { ...produto, quantidade: quantidadeNormalizada },
+      ];
     });
   }
 
-  function aumentarQuantidade(produto: Produto) {
+  function aumentarQuantidade(produto: ProdutoSelecionado) {
     setCarrinho((carrinhoAtual) =>
       carrinhoAtual.map((item) =>
         mesmoProduto(item, produto)
@@ -173,7 +184,7 @@ function useCatalogState() {
     );
   }
 
-  function diminuirQuantidade(produto: Produto) {
+  function diminuirQuantidade(produto: ProdutoSelecionado) {
     setCarrinho((carrinhoAtual) =>
       carrinhoAtual
         .map((item) =>
@@ -185,7 +196,7 @@ function useCatalogState() {
     );
   }
 
-  function removerProduto(produto: Produto) {
+  function removerProduto(produto: ProdutoSelecionado) {
     setCarrinho((carrinhoAtual) =>
       carrinhoAtual.filter((item) => !mesmoProduto(item, produto)),
     );

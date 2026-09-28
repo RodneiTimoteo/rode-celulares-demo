@@ -5,19 +5,17 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../public/brand/rodevita-logo-horizontal.png";
+import logo from "../../public/brand/rode-celulares-logo-horizontal.svg";
 import { Container, buttonStyles } from "@/components/ui";
+import { storeUnits } from "@/data/units";
+import { whatsappUrl } from "@/utils/whatsapp";
 
 function BrandLogo() {
   return (
-    <Link
-      href="/"
-      aria-label="RodeVita — Drogaria & Bem-estar, início"
-      className="brand-logo"
-    >
+    <Link href="/" aria-label="RODE Celulares — início" className="brand-logo">
       <Image
         src={logo}
-        alt="RodeVita — Drogaria & Bem-estar. Cuidado para todos os dias."
+        alt="RODE Celulares — Conectando você com o que importa."
         sizes="280px"
         loading="eager"
       />
@@ -27,9 +25,16 @@ function BrandLogo() {
 const navigation = [
   ["Início", "/#inicio"],
   ["Produtos", "/produtos"],
-  ["Categorias", "/#categorias"],
   ["Ofertas", "/ofertas"],
-  ["Serviços", "/servicos"],
+  ["Unidades", "/unidades"],
+  ["Sobre", "/sobre"],
+  ["Contato", "/contato"],
+];
+const footerNavigation = [
+  ["Início", "/#inicio"],
+  ["Produtos", "/produtos"],
+  ["Ofertas", "/ofertas"],
+  ["Unidades", "/unidades"],
   ["Sobre", "/sobre"],
   ["Contato", "/contato"],
 ];
@@ -37,7 +42,8 @@ export function Header() {
   const { quantidadeTotal: quantidade } = useCatalog();
   const [aberto, setAberto] = useState(false);
   const pathname = usePathname();
-  const cartHref = pathname === "/produtos" ? "#orcamento" : "/produtos#orcamento";
+  const cartHref =
+    pathname === "/produtos" ? "#orcamento" : "/produtos#orcamento";
   return (
     <header className="site-header">
       <Container className="header-inner">
@@ -99,47 +105,45 @@ export function Header() {
 export function Footer() {
   return (
     <footer className="site-footer">
-      <Container className="flex flex-wrap items-center justify-between gap-8 py-10">
-        <BrandLogo />
-        <div className="max-w-sm text-sm text-muted">
-          <p className="font-heading font-semibold text-brand">
-            Cuidado para todos os dias.
-          </p>
-          <p className="mt-2">
-            Explore o catálogo e solicite seu orçamento pelo WhatsApp na sua
-            lista de produtos.
-          </p>
-          <Link
-            href="/produtos"
-            className="mt-4 inline-block font-semibold text-health"
-          >
-            Voltar ao catálogo ↑
-          </Link>
+      <Container className="footer-main">
+        <div className="footer-brand">
+          <BrandLogo />
+          <p>Conectando você com o que importa.</p>
         </div>
-      </Container>
-      <Container className="border-t border-border py-8">
-        <nav
-          aria-label="Navegação do rodapé"
-          className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-semibold text-brand"
-        >
-          {navigation.slice(1).map(([label, id]) => (
-            <Link href={id} key={id}>
+
+        <nav aria-label="Navegação do rodapé" className="footer-column">
+          <strong>Navegação</strong>
+          {footerNavigation.map(([label, href]) => (
+            <Link href={href} key={href}>
               {label}
             </Link>
           ))}
         </nav>
-        <p className="mt-6 text-sm text-muted">
-          Endereço fictício: Rua do Bem-estar, 123 · Cidade Exemplo, SP
-          <br />
-          Contato fictício: contato@rodevita.example
+
+        <div className="footer-column">
+          <strong>Atendimento</strong>
+          <a href={whatsappUrl()} target="_blank" rel="noopener noreferrer">
+            WhatsApp
+          </a>
+          <span>Instagram · perfil a definir</span>
+          <Link href="/contato">Fale conosco</Link>
+        </div>
+
+        <div className="footer-column">
+          <strong>Unidades</strong>
+          {storeUnits.map((unit) => (
+            <Link href="/unidades" key={unit.id}>
+              {unit.name} · {unit.address}
+            </Link>
+          ))}
+        </div>
+      </Container>
+      <Container className="footer-bottom">
+        <p>
+          Projeto demonstrativo. Produtos, preços, endereços e condições devem
+          ser confirmados no atendimento.
         </p>
-        <p className="mt-5 max-w-3xl text-xs leading-relaxed text-muted">
-          Projeto demonstrativo. Informações, produtos, preços, endereço e
-          contatos apresentados são fictícios. Este site não realiza vendas.
-        </p>
-        <p className="mt-6 text-xs font-medium text-brand">
-          Desenvolvido por RODE Soluções Inteligentes
-        </p>
+        <p>Desenvolvido por RODE – Soluções Inteligentes</p>
       </Container>
     </footer>
   );

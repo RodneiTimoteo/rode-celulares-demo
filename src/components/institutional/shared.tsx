@@ -50,7 +50,10 @@ export function InstitutionalIcon({
     | "phone"
     | "heart"
     | "search"
-    | "digital";
+    | "digital"
+    | "location"
+    | "store"
+    | "device";
 }) {
   const paths = {
     pressure: "M4 17a9 9 0 1 1 16 0M12 12l4-5M7 19h10M4 10h2m12 0h2M12 3v2",
@@ -65,6 +68,11 @@ export function InstitutionalIcon({
     heart: "M12 21S3 16 3 9a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 7-9 12-9 12Z",
     search: "M10 3a7 7 0 1 1 0 14 7 7 0 0 1 0-14Zm5 12 6 6",
     digital: "M5 3h14v18H5V3Zm4 4h6m-3 10h.01M8 11h8",
+    location:
+      "M12 21s7-6 7-12A7 7 0 1 0 5 9c0 6 7 12 7 12Zm0-9a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
+    store:
+      "M4 10v11h16V10M3 10l2-7h14l2 7M7 21v-6h4v6M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0",
+    device: "M7 2h10a2 2 0 0 1 2 2v16H5V4a2 2 0 0 1 2-2Zm3 3h4m-3 12h2",
   };
   return (
     <svg
@@ -92,7 +100,9 @@ export function WhatsAppCta({
 }) {
   return (
     <section className="final-cta">
-      <p className="eyebrow">RodeVita · Cuidado para todos os dias</p>
+      <p className="eyebrow">
+        RODE Celulares · Conectando você com o que importa
+      </p>
       <SectionTitle className="text-3xl">{title}</SectionTitle>
       <p className="mx-auto mt-4 max-w-xl leading-relaxed text-muted">{text}</p>
       <a
