@@ -63,9 +63,7 @@ function useCatalogState() {
                     ? error.name
                     : "desconhecido",
                 detalhe:
-                  error instanceof Error
-                    ? error.message
-                    : "Falha desconhecida",
+                  error instanceof Error ? error.message : "Falha desconhecida",
               },
             );
           }
@@ -127,6 +125,26 @@ function useCatalogState() {
     localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(carrinho));
   }, [carrinho, carrinhoCarregado]);
 
+  // Atualiza preços e prazos de itens persistidos sem perder seleção ou quantidade.
+  useEffect(() => {
+    if (!carrinhoCarregado || produtos.length === 0) return;
+
+    // Sincroniza o snapshot externo restaurado do localStorage com a API atual.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCarrinho((carrinhoAtual) =>
+      carrinhoAtual.map((item) => {
+        const produtoAtual = produtos.find((produto) => produto.id === item.id);
+        if (!produtoAtual) return item;
+
+        return {
+          ...produtoAtual,
+          selecao: item.selecao,
+          quantidade: item.quantidade,
+        };
+      }),
+    );
+  }, [carrinhoCarregado, produtos]);
+
   useEffect(() => {
     if (!carrinhoCarregado) return;
 
@@ -161,6 +179,7 @@ function useCatalogState() {
           mesmoProduto(item, produto)
             ? {
                 ...item,
+                ...produto,
                 quantidade: item.quantidade + quantidadeNormalizada,
               }
             : item,

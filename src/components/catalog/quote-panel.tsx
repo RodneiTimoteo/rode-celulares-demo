@@ -3,8 +3,10 @@ import { Button } from "@/components/ui";
 import { FORMAS_PAGAMENTO, type FormaPagamento } from "@/utils/quote-message";
 import { chaveProduto, linhasVariacao } from "@/utils/product-variants";
 import { formatarMoeda, precoAtual } from "@/utils/product-price";
+import { useOfferClock } from "@/hooks/use-offer-clock";
 import { useCatalog } from "./catalog-provider";
 export function QuotePanel({ className = "" }: { className?: string }) {
+  const agora = useOfferClock();
   const {
     carrinho,
     quantidadeTotal,
@@ -56,7 +58,7 @@ export function QuotePanel({ className = "" }: { className?: string }) {
                     <p className="text-sm text-muted">{item.dosagem}</p>
                   )}
                   <p className="mt-2 text-sm font-semibold text-foreground">
-                    {formatarMoeda(precoAtual(item))}
+                    {formatarMoeda(precoAtual(item, agora))}
                   </p>
                 </div>
 

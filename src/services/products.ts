@@ -93,6 +93,7 @@ function normalizarProduto(valor: unknown): ProdutoApi | null {
   const precoOriginal = normalizarPreco(produto.preco_original);
   const precoPromocional = normalizarPreco(produto.preco_promocional);
   const temPromocao = normalizarBooleano(produto.tem_promocao) ?? false;
+  const ofertaTerminaEm = textoOpcional(produto.oferta_termina_em);
   const destaque = normalizarBooleano(produto.destaque) ?? false;
 
   return {
@@ -109,6 +110,7 @@ function normalizarProduto(valor: unknown): ProdutoApi | null {
     precoOriginal,
     precoPromocional: precoPromocional ?? null,
     temPromocao,
+    ofertaTerminaEm: ofertaTerminaEm ?? null,
     destaque,
     ativo,
     imagem: textoOpcional(produto.imagem),

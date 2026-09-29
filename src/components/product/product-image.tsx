@@ -56,7 +56,7 @@ export function ProductImage({
           <span className="product-image__speaker" />
           <span className="product-image__screen">
             <strong>{produto.marca ?? "RODE"}</strong>
-            <small>Smartphone · Tecnologia</small>
+            <small>Smartphone</small>
           </span>
           <span className="product-image__camera" />
         </div>

@@ -29,6 +29,7 @@ export type Produto = {
   precoOriginal?: number;
   precoPromocional?: number | null;
   temPromocao: boolean;
+  ofertaTerminaEm?: string | null;
   destaque: boolean;
   ativo: boolean;
   /** Compatibilidade com itens persistidos antes da estrutura promocional. */

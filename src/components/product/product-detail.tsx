@@ -9,10 +9,16 @@ import { useCatalog } from "@/components/catalog/catalog-provider";
 import { QuotePanel } from "@/components/catalog/quote-panel";
 import { ProductCard } from "@/components/home/product-card";
 import { ProductImage } from "@/components/product/product-image";
+import { OfferCountdown } from "@/components/product/offer-countdown";
 import { ProductPrice } from "@/components/product/product-price";
+import { useOfferClock } from "@/hooks/use-offer-clock";
 import { whatsappUrl } from "@/utils/whatsapp";
 import { criarMensagemOrcamento } from "@/utils/quote-message";
-import { formatarMoeda, precoAtual } from "@/utils/product-price";
+import {
+  formatarMoeda,
+  precoAtual,
+  temPromocaoValida,
+} from "@/utils/product-price";
 import {
   comSelecao,
   mesmoProduto,
@@ -142,6 +148,7 @@ export function ProductDetail({
   related: Produto[];
 }) {
   const { carrinho, adicionarAoCarrinho } = useCatalog();
+  const agora = useOfferClock();
   const [selecao, setSelecao] = useState<SelecaoProduto>(() =>
     selecaoInicial(produto),
   );
@@ -151,6 +158,7 @@ export function ProductDetail({
     () => comSelecao(produto, selecao),
     [produto, selecao],
   );
+  const promocaoAtiva = temPromocaoValida(produto, agora);
 
   useEffect(() => {
     if (!feedback) return;
@@ -217,9 +225,19 @@ export function ProductDetail({
               precoOriginal={produto.precoOriginal ?? produto.preco}
               precoPromocional={produto.precoPromocional}
               temPromocao={produto.temPromocao}
+              ofertaTerminaEm={produto.ofertaTerminaEm}
+              agora={agora}
               size="detail"
               showBadge
             />
+            {promocaoAtiva && (
+              <OfferCountdown
+                ofertaTerminaEm={produto.ofertaTerminaEm}
+                agora={agora}
+                variant="detail"
+                className="mt-5"
+              />
+            )}
 
             <VariationOptions
               produto={produto}
@@ -309,7 +327,7 @@ export function ProductDetail({
               ["Produto", produto.nome],
               ["Marca", produto.marca ?? "Consulte nossa equipe"],
               ["Categoria", produto.categoria],
-              ["Preço atual", formatarMoeda(precoAtual(produto))],
+              ["Preço atual", formatarMoeda(precoAtual(produto, agora))],
             ].map(([label, value]) => (
               <div key={label}>
                 <dt className="text-xs text-muted">{label}</dt>

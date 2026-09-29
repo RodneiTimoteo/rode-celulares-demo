@@ -42,6 +42,14 @@ export function armazenamentoPrincipal(produto: Produto): string | undefined {
   return produto.variacoes?.armazenamento?.[0];
 }
 
+export function temVariacoesParaSelecionar(produto: Produto): boolean {
+  return [
+    produto.variacoes?.armazenamento,
+    produto.variacoes?.cores,
+    produto.variacoes?.modelosCompativeis,
+  ].some((opcoes) => (opcoes?.length ?? 0) > 1);
+}
+
 export function linhasVariacao(produto: ProdutoSelecionado): string[] {
   const linhas: string[] = [];
   if (produto.selecao?.armazenamento) {
